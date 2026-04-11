@@ -40,7 +40,8 @@ export default function AddProductForm({ products, onProductsChange }: Props) {
   const [errorMessage, setErrorMessage] = useState("");
 
   // フォームを送信するときに実行する処理
-  function handleSubmit(e) {
+  // React.FormEvent<HTMLFormElement>のFormEventは非推奨らしい→SubmitEvent系が推奨
+  function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     // 再描画を防ぐ
     e.preventDefault();
     if (productPrice === "") {
@@ -75,6 +76,9 @@ export default function AddProductForm({ products, onProductsChange }: Props) {
   // onProductsChange(newProducts);
   return (
     <>
+      {/* Formを提出したときに実行される関数がhandleSubmit。
+      onSubmitが渡す引数とhandleSubmitが受け取る引数がズレている
+      reactでフォームがsubmitされたとき、どんなイベントが渡されるのかを理解しないといけない！ */}
       <form onSubmit={handleSubmit}>
         {/* セレクトはどうやって入力を受け取る？ */}
         <div className="mb-3">
