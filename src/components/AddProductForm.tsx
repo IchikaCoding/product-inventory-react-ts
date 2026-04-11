@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   validationPrice,
   validationTrimmedName,
@@ -24,9 +24,11 @@ import type { Product } from "../data/products";
  * @returns {JSX.Element}
  */
 // onProductsChangeはsetStateの関数を渡している→型の書き方がちょっと違う！
+// TODO: (value: Product[]) => voidってだめ？
 type Props = {
   products: Product[];
-  onProductsChange: (value: Product[]) => void;
+  // React.SetStateActionの引数の型は配列だけでいいのかな？アロー関数は入れる？
+  onProductsChange: React.Dispatch<React.SetStateAction<Product[]>>;
 };
 export default function AddProductForm({ products, onProductsChange }: Props) {
   // ローカルのstateを作成する
