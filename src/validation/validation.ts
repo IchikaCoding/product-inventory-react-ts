@@ -6,7 +6,7 @@ export function validationPrice(productPrice: string): string {
   //   String()が要らないかも！
   //     →フォームの <input> から来る値は通常 string文字列しか受け取らないから、String()は不要かも？
   //   念のために書いておく！
-  if (String(productPrice).trim() === "") {
+  if (productPrice.trim() === "") {
     return "Please enter the price";
   }
   const price = Number(productPrice);
