@@ -150,7 +150,7 @@ export default function AddProductForm({ products, onProductsChange }: Props) {
           ></input>
         </div>
         {/* trueのときにHTML書くなら()で囲む */}
-        {/* errorMessageがnullじゃない時表示 */}
+        {/* errorMessageがnullじゃない時に表示する処理に修正 */}
         {errorMessage !== null ? (
           <p className="error-message text-danger" role="alert">
             {errorMessage}
