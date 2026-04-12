@@ -3,28 +3,18 @@ import {
   validationPrice,
   validationTrimmedName,
 } from "../validation/validation";
+// ./これで一個上がる→componentsにいる。./でsrcにいく
 import type { Product } from "../data/products";
 
 // ここでinputされた情報を受け取る必要がある！
 
 /**
- * @typedef {Object} Product
- * @property {string} category
- * @property {string} id
- * @property {string} name
- * @property {number} price
- * @property {boolean} stocked
- */
-
-/**
  * 商品追加フォームの作成、入力値を受け取る処理（UI担当）
- * @param {Object} props
- * @param {Product[]} props.products
- * @param {(value: Product[])=> void} props.onProductsChange
  * @returns {JSX.Element}
  */
 // onProductsChangeはsetStateの関数を渡している→型の書き方がちょっと違う！
-// TODO: (value: Product[]) => voidってだめ？
+// ! (value: Product[]) => voidってだめ？
+// →コールバックを渡しているならこっち。親から setState を直接受け取るなら今の型定義！
 type Props = {
   products: Product[];
   // React.SetStateActionの引数の型は配列だけでいいのかな？アロー関数は入れる？
@@ -37,7 +27,8 @@ export default function AddProductForm({ products, onProductsChange }: Props) {
   const [productPrice, onProductPriceChange] = useState("");
   const [isProductStock, onIsProductStockChange] = useState(false);
   const [productName, onProductNameChange] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  // エラーがあるなら文字列、ないならnullにした
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // フォームを送信するときに実行する処理
   // React.FormEvent<HTMLFormElement>のFormEventは非推奨らしい→SubmitEvent系が推奨
@@ -60,6 +51,7 @@ export default function AddProductForm({ products, onProductsChange }: Props) {
       setErrorMessage(nameError);
       return;
     }
+
     setErrorMessage(null);
     const newProduct = {
       id: crypto.randomUUID(),
@@ -158,7 +150,8 @@ export default function AddProductForm({ products, onProductsChange }: Props) {
           ></input>
         </div>
         {/* trueのときにHTML書くなら()で囲む */}
-        {errorMessage ? (
+        {/* errorMessageがnullじゃない時表示 */}
+        {errorMessage !== null ? (
           <p className="error-message text-danger" role="alert">
             {errorMessage}
           </p>
