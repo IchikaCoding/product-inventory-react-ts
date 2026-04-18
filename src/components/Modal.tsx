@@ -1,5 +1,9 @@
+// named Exportしているから{}でimport可能！
 import { useEffect, useRef } from "react";
-
+// Reactがdefault Exportだから{}だとimportできない
+// import React from "react";
+// onClickでMouseEventを使うからその型のみをimportしてみた
+import type { MouseEvent } from "react";
 /**
  * 削除ボタンを押したときのモーダル表示処理
  * @param {Object} props
@@ -33,7 +37,7 @@ export default function Modal({ isModalOpen, onConfirm, onCancel }: Props) {
       }
     }
     // 角煮
-    console.log("closeButtonRef", closeButtonRef);
+    // console.log("closeButtonRef", closeButtonRef);
     document.addEventListener("keydown", handleEscapeKeyDown);
     // イベントの処理が終わったらreturnのうしろにイベントの解除の処理を書く！
     return () => {
@@ -45,6 +49,7 @@ export default function Modal({ isModalOpen, onConfirm, onCancel }: Props) {
   // TODO: Modalのフォーカスと背景スクロールの制御のuseEffectを書く
   // ここで書いていいのかわからないけど書く
   useEffect(() => {
+    // appContentはテーブルとか表示するための要素全体を囲んでいる要素
     const appContent = document.getElementById("app-content");
     if (!appContent) return;
     // Modalが開いている場合のコード
@@ -100,7 +105,7 @@ export default function Modal({ isModalOpen, onConfirm, onCancel }: Props) {
         {/* e.stopPropagation()でダイアログ画面の内側のクリックを外側に伝えないようにしている */}
         <div
           className="modal-dialog modal-dialog-centered"
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e: MouseEvent<HTMLDivElement>) => e.stopPropagation()}
         >
           {/* モーダル画面本体。e.stopPropagation()によって
       ダイアログがクリックされても背景までクリックされたことが伝わらない！
