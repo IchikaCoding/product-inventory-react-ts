@@ -17,7 +17,7 @@ type Props = {
 export default function Modal({ isModalOpen, onConfirm, onCancel }: Props) {
   // closeButtonRefはモーダルの要素の中身だからこのコンポーネントで宣言したってこと
   // ! closeButtonRef.currentのDOM要素には画面描画後に入る
-  const closeButtonRef = useRef(null);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
 
   // イベントリスナー登録したい！これは画面描画以外👉️useEffectの出番！
   // TODO: これって最後に処理される？
@@ -53,6 +53,8 @@ export default function Modal({ isModalOpen, onConfirm, onCancel }: Props) {
       // どうしたらこれ検索できる？
       document.body.style.overflow = "hidden";
       // Modalの閉じるボタンにフォーカス
+      // ! closeButtonRefの型を定義していないとエラーになる
+      // →HTMLButtonElementかnullが入ることを定義するといい
       closeButtonRef.current?.focus();
       // inert属性とはその要素の中を「操作できない状態」にする属性
       // setAttributeは第1引数に属性名、第2引数に値を書く
