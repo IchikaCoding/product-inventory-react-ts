@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+// xlsxのpackageをインストールしておく必要がある
 import { read, utils } from "xlsx";
 
 /**
@@ -15,7 +16,31 @@ const VALID_CATEGORIES = ["Fruits", "Vegetables", "Snacks"];
  * @param {number} rowIndex - 行番号（エラーメッセージ用）
  * @returns {{ product: Product | null, error: string | null }}
  */
-function parseRow(row, rowIndex) {
+
+// rowのオブジェクトの型を定義する
+type Row = {
+  category: string;
+  name: string;
+  price: number;
+  stocked: boolean;
+};
+
+// TODO: productのオブジェクトの型を定義しよう
+type Product = {
+  id: string;
+  category: string;
+  name: string;
+  price: number;
+  stocked: boolean;
+};
+
+type ParseRowResult = {
+  product: Product | null;
+  error: string | null;
+};
+
+// TODO: リターンの型を書こう
+function parseRow(row: Row, rowIndex: number) {
   // categoryを文字列にしつつ、スペースを削除
   const category = String(row.category ?? "").trim();
   const name = String(row.name ?? "").trim();
