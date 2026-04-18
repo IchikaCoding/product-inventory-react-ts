@@ -1,10 +1,7 @@
 import { useState, useRef } from "react";
 // xlsxのpackageをインストールしておく必要がある
 import { read, utils } from "xlsx";
-
-/**
- * @typedef {import("../data/products").Product} Product
- */
+import type { Product } from "../data/products";
 
 // CSVやExcelで使えるカテゴリの一覧
 const VALID_CATEGORIES = ["Fruits", "Vegetables", "Snacks"];
@@ -17,30 +14,29 @@ const VALID_CATEGORIES = ["Fruits", "Vegetables", "Snacks"];
  * @returns {{ product: Product | null, error: string | null }}
  */
 
-// rowのオブジェクトの型を定義する
+/**
+ * ファイルから読み取った1行分のデータ
+ */
 type Row = {
   category: string;
   name: string;
   price: number;
   stocked: boolean;
 };
-
-// TODO: productのオブジェクトの型を定義しよう
-type Product = {
-  id: string;
-  category: string;
-  name: string;
-  price: number;
-  stocked: boolean;
-};
-
+/**
+ * parseRow関数の戻り値の型
+ * Product型はimportした
+ */
 type ParseRowResult = {
   product: Product | null;
   error: string | null;
 };
 
-// TODO: リターンの型を書こう
-function parseRow(row: Row, rowIndex: number) {
+/**
+ * 1行分のデータをバリデーションして、Productオブジェクトに変換する
+ * rowIndexは行番号（エラーメッセージ用）
+ */
+function parseRow(row: Row, rowIndex: number): ParseRowResult {
   // categoryを文字列にしつつ、スペースを削除
   const category = String(row.category ?? "").trim();
   const name = String(row.name ?? "").trim();
