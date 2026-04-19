@@ -158,9 +158,9 @@ export default function ImportProducts({ products, onProductsChange }: Props) {
    * ファイルが選択されたときの処理
    * ReactのイベントとJSのイベントの違いは？👉️onChange などで受け取る SyntheticEvent（合成イベント）。JSのイベントはaddEventListenerで受け取る Event
    * HTMLInputElementから、Input要素のイベントの型ですよという説明書き
-   * @param {React.ChangeEvent<HTMLInputElement>} e ブラウザのイベントみたいな感じで使える。ブラウザ差を吸収して、どの環境でも同じ書き方にしてくれるらしい。
+   * React.ChangeEvent<HTMLInputElement>はブラウザのイベントみたいな感じで使える。ブラウザ差を吸収して、どの環境でも同じ書き方にしてくれるらしい。
    */
-  function handleFileChange(e) {
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     // input要素自体がfile型を指定されているから、自分でもファイルを指定しているから？
     // 複数ファイルを選択できるようにするには👉️multiple 属性を input 要素に付けると複数可能になる
     // 0は1つ目のファイルにアクセスするの意味
