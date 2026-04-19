@@ -188,11 +188,13 @@ export default function ImportProducts({ products, onProductsChange }: Props) {
 
     // xlsxの処理はここから読む
     // FileReaderオブジェクトを使用するとファイルを非同期に読み取ることができます
-    const reader = new FileReader();
+    // オブジェクトを作成するとその型名はオブジェクト名と同じになる！
+    const reader: FileReader = new FileReader();
     // onloadメソッドって何？👉️fileを読み込む方法を登録する処理
     // readerは非同期だからawaitが必要なのでは？👉️FileReader()は古いAPIだから、Promiseを返さない👉️awaitは不要で、成功したときの処理はonloadでセットしておく
     // どうしてコールバック？関数の定義をしているだけ？readAsArrayBufferをするときにonloadを勝手につかって処理してくれる
     // ファイルを読み込んだあとの処理を先に登録しておかないとファイル読み込みが早く終わった場合に間に合わなくなるらしい！
+    // TODO: eventの型を書く→ProgressEvent<FileReader> 型らしい（？）
     reader.onload = (event) => {
       try {
         // TODO: event.target.resultが取得出来ているのかを確認してエラー出す処理があってもいいかも？reader.onerrorでもOK
