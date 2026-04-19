@@ -145,14 +145,14 @@ export default function ImportProducts({ products, onProductsChange }: Props) {
   // 空の配列で初期化するとerrors.lengthとかが最初から使えるので安心！null だと、配列メソッドを使ったときにエラーになりやすいから注意！
   // このコンポーネント内で表示非表示を管理するから、ここでstateを宣言している
   // stateにしてエラーと成功したときのメッセージを表示できるようにしている
-  const [errors, setErrors] = useState([]);
-  const [successMessage, setSuccessMessage] = useState("");
+  // string[]は文字列しか入らない配列ですよとの意味
+  const [errors, setErrors] = useState<string[]>([]);
+  const [successMessage, setSuccessMessage] = useState<string>("");
 
   /**
    * input要素から取得するRef
-   * @type {import("react").RefObject<HTMLInputElement | null>}
    */
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   /**
    * ファイルが選択されたときの処理
