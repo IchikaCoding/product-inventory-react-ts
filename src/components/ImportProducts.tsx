@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 // xlsxのpackageをインストールしておく必要がある
 import { read, utils } from "xlsx";
 import type { Product } from "../data/products";
-import type { Dispatch, SetStateAction } from "react";
+import type { Dispatch, SetStateAction, ChangeEvent } from "react";
 
 // CSVやExcelで使えるカテゴリの一覧
 const VALID_CATEGORIES = ["Fruits", "Vegetables", "Snacks"];
@@ -160,7 +160,7 @@ export default function ImportProducts({ products, onProductsChange }: Props) {
    * HTMLInputElementから、Input要素のイベントの型ですよという説明書き
    * React.ChangeEvent<HTMLInputElement>はブラウザのイベントみたいな感じで使える。ブラウザ差を吸収して、どの環境でも同じ書き方にしてくれるらしい。
    */
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
     // input要素自体がfile型を指定されているから、自分でもファイルを指定しているから？
     // 複数ファイルを選択できるようにするには👉️multiple 属性を input 要素に付けると複数可能になる
     // 0は1つ目のファイルにアクセスするの意味
@@ -173,9 +173,13 @@ export default function ImportProducts({ products, onProductsChange }: Props) {
     // fileは配列？ドットの位置で区切って配列として返す👉️popで最後の拡張子の部分があるなら小文字にして返す
     // ! splitで?.をやらないのは、文字列なら.がなくてもそのままの文字列が必ず返ってくるから。
     // file.name.split(".")で空の配列になった場合、pop()でundefinedになる→それを防ぐために?.を使う
-    const ext = file.name.split(".").pop()?.toLowerCase();
+    const ext: string | undefined = file.name.split(".").pop()?.toLowerCase();
     // もし拡張子が"csv", "xlsx", "xls"でもなかったらエラーを返す
-    if (!["csv", "xlsx", "xls"].includes(ext)) {
+    // extにはundefinedが入る可能性がある
+    // →今回は["csv", "xlsx", "xls"]から型推論してstring[]がincludes()の引数になる想定
+    // →だからundefinedが入るとエラーになる
+    // →extがfalseのときは別で処理しておく
+    if (!ext || !["csv", "xlsx", "xls"].includes(ext)) {
       setErrors(["Please select a CSV or Excel (.xlsx, .xls) file."]);
       // nullじゃないのは、基本は後からセットするメッセージの型に揃えたいから
       setSuccessMessage("");
