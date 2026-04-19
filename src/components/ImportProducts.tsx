@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 // xlsxのpackageをインストールしておく必要がある
 import { read, utils } from "xlsx";
 import type { Product } from "../data/products";
+import type { Dispatch, SetStateAction } from "react";
 
 // CSVやExcelで使えるカテゴリの一覧
 const VALID_CATEGORIES = ["Fruits", "Vegetables", "Snacks"];
@@ -17,12 +18,20 @@ const VALID_CATEGORIES = ["Fruits", "Vegetables", "Snacks"];
 /**
  * ファイルから読み取った1行分のデータ
  */
-type Row = {
-  category: string;
-  name: string;
-  price: number;
-  stocked: boolean;
+type RawRow = {
+  category: unknown;
+  name: unknown;
+  price: unknown;
+  stocked: unknown;
 };
+
+// type Row = {
+//   category: string;
+//   name: string;
+//   price: number;
+//   stocked: boolean;
+// };
+
 /**
  * parseRow関数の戻り値の型
  * Product型はimportした
@@ -36,13 +45,15 @@ type ParseRowResult = {
  * 1行分のデータをバリデーションして、Productオブジェクトに変換する
  * rowIndexは行番号（エラーメッセージ用）
  */
-function parseRow(row: Row, rowIndex: number): ParseRowResult {
+function parseRow(row: RawRow, rowIndex: number): ParseRowResult {
   // categoryを文字列にしつつ、スペースを削除
   const category = String(row.category ?? "").trim();
   const name = String(row.name ?? "").trim();
   // 一旦入力から来たそのままの値を取得してからNumberで変換する（2段階にしておく）
   // 変数のRawは仮のデータとして保存していることをわかりやすくするため
   const priceRaw = row.price;
+  // この時点でもstockedRawはunknown型
+  // →あとから型を絞り込んでいく方針
   const stockedRaw = row.stocked;
 
   // カテゴリのチェック
@@ -75,13 +86,15 @@ function parseRow(row: Row, rowIndex: number): ParseRowResult {
   }
 
   // 在庫のチェック（true/false/"TRUE"/"FALSE"/1/0 を許容）
-  let stocked;
+  let stocked: boolean;
+  // unknown型だからifで分岐されて型を絞りこむ→Narrowing
   // 在庫一時データが真偽値か確認して、真偽値だったらstockedに代入
   if (typeof stockedRaw === "boolean") {
     stocked = stockedRaw;
   } else {
     // stockedが真偽値じゃないときの処理
     // stockedRawがあったらそれを文字列にして、スペース消す、小文字にしてsに代入。なかったら空文字をいれる。
+    // ??はnull合体演算子。
     // toLowerCase()は日本語なら何も変化なし
     const s = String(stockedRaw ?? "")
       .trim()
@@ -120,7 +133,15 @@ function parseRow(row: Row, rowIndex: number): ParseRowResult {
  * @param {(value: Product[]) => void} props.onProductsChange - 商品リストを更新する関数
  * @returns {JSX.Element}
  */
-export default function ImportProducts({ products, onProductsChange }) {
+
+// TODO: Propsの型を書く
+type Props = {
+  products: Product[];
+  onProductsChange: Dispatch<SetStateAction<Product[]>>;
+};
+
+//
+export default function ImportProducts({ products, onProductsChange }: Props) {
   // 空の配列で初期化するとerrors.lengthとかが最初から使えるので安心！null だと、配列メソッドを使ったときにエラーになりやすいから注意！
   // このコンポーネント内で表示非表示を管理するから、ここでstateを宣言している
   // stateにしてエラーと成功したときのメッセージを表示できるようにしている
