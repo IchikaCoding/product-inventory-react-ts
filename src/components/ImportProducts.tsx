@@ -215,7 +215,8 @@ export default function ImportProducts({ products, onProductsChange }: Props) {
         const sheet = workbook.Sheets[sheetName];
         // -------------ここまで2026-03-13----------------
         // シートをJSON配列に変換（ヘッダー行をキーとして使う）
-        const rows = utils.sheet_to_json(sheet);
+        // rowsはRawRow型の値が入ってる配列
+        const rows: RawRow[] = utils.sheet_to_json(sheet);
         if (rows.length === 0) {
           setErrors(["The file is empty or has no data rows."]);
           setSuccessMessage("");
@@ -227,18 +228,44 @@ export default function ImportProducts({ products, onProductsChange }: Props) {
         // エラーが出ていても止めず全部のエラーを集めて一括で表示するために配列にしておく
         // throwだとエラーが出たときに止まっちゃうから細かい行エラーを出せない
         const parseErrors = [];
-
+        // rowsはRawRow[]じゃない可能性がある。生データだからうまく取得できたかわからないから！
+        // TODO: ここにRawRow型かチェックする処理を追加
+        // TODO: for の中で isRawRow(rows[i]) をチェックしてから parseRow を呼ぶ
+        // 引数はrow、返り値はboolean
+        // rowがRawRow型ならtrue
+        // rowとRawRowの型が一致しているときという条件が書きたい
+        function isRawRow(row: unknown): row is RawRow {
+          // falseにしたい処理は？配列、null、オブジェクトじゃない時
+          // trueにしたいとき？RawRowのプロパティが揃っているとき
+          if (row === null || typeof row !== "object" || Array.isArray(row))
+            return false;
+          // プロパティをLiteral型として固定します
+          // rowのプロパティを含むかどうかをチェックします
+          const Property_Key = [
+            "category",
+            "name",
+            "price",
+            "stocked",
+          ] as const;
+          Property_Key.every((key) => key in row);
+          return true;
+        }
+        // データを受け取る、0個じゃないことを確認する、
+        // parseRowをする前にrowsの要素がRawRow型であるかどうかを確認する
         for (let i = 0; i < rows.length; i++) {
-          // どうしてrowIndex求めるときに＋2をするの？
-          // →rows配列はインデックスが0スタート。Excel側では1行目がヘッダー。2行目から商品が入る。Excelと同じ行番号をいれるためには+2が必要
-          const { product, error } = parseRow(rows[i], i + 2); // +2: ヘッダー行 + 0-indexed
-          // エラーの処理を先にやるほうが読みやすいらしい
-          if (error) {
-            parseErrors.push(error);
-          } else {
-            newProducts.push(product);
+          if (isRawRow(rows[i])) {
+            // どうしてrowIndex求めるときに＋2をするの？
+            // →rows配列はインデックスが0スタート。Excel側では1行目がヘッダー。2行目から商品が入る。Excelと同じ行番号をいれるためには+2が必要
+            const { product, error } = parseRow(rows[i], i + 2);
+            // エラーの処理を先にやるほうが読みやすいらしい
+            if (error) {
+              parseErrors.push(error);
+            } else {
+              newProducts.push(product);
+            }
           }
         }
+
         if (parseErrors.length > 0) {
           // エラーは配列としてsetErrorsにセットする
           setErrors(parseErrors);
