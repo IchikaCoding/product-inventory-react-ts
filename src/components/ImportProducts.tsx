@@ -201,9 +201,10 @@ export default function ImportProducts({ products, onProductsChange }: Props) {
         // event.target.resultは、ArrayBuffer(5461)（生データの入れ物）
         // Uint8Arrayはなに？「5452バイトのデータを、1バイトずつ0〜255の数字」で見えるようにしたもの。バイナリを数値表示しただけのビュー」
         // dataには配列の中に数字の羅列があった
-        const eventResult: ArrayBuffer | null = event.target
-          ?.result as ArrayBuffer | null;
-        const data = new Uint8Array(eventResult);
+        const rowEventResult = event.target?.result;
+        // 「rowEventResult が ArrayBuffer のインスタンスか？」
+        if (!(rowEventResult instanceof ArrayBuffer)) return;
+        const data = new Uint8Array(rowEventResult);
 
         // xlsxのライブラリのreadメソッドです
         // TODO: dataを配列型で読むよ、と意味かどうかを確認する
