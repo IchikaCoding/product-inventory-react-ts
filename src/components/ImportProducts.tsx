@@ -219,7 +219,9 @@ export default function ImportProducts({ products, onProductsChange }: Props) {
         // ! sheet_to_jsonメソッドを使用した時に、受け取るデータの型は指定する
         // 理由は、any のまま扱う時間を減らして、以降のコードを型付きで書くため
         // そしたらrows: RawRow[]は不要になる！
-        const rows = utils.sheet_to_json<RawRow[]>(sheet);
+        // <RawRow>で、一つの要素がRawRow型ですよの意味になる（<RawRow[]>なら、一つの要素がRawRow配列の型という意味になってしまう）
+        // sheet_to_json<RawRow>(sheet) で戻り値が RawRow[]
+        const rows = utils.sheet_to_json<RawRow>(sheet);
         if (rows.length === 0) {
           setErrors(["The file is empty or has no data rows."]);
           setSuccessMessage("");
@@ -227,10 +229,10 @@ export default function ImportProducts({ products, onProductsChange }: Props) {
         }
 
         // 一つでもエラーがあったら追加しない安全なデータ取り込みを学ぶ
-        const newProducts = [];
+        const newProducts: Product[] = [];
         // エラーが出ていても止めず全部のエラーを集めて一括で表示するために配列にしておく
         // throwだとエラーが出たときに止まっちゃうから細かい行エラーを出せない
-        const parseErrors = [];
+        const parseErrors: string[] = [];
         // rowsはRawRow[]じゃない可能性がある。生データだからうまく取得できたかわからないから！
         // for の中で isRawRow(rows[i]) をチェックしてから parseRow を呼ぶ
         // 引数はrow、返り値はboolean
@@ -259,11 +261,15 @@ export default function ImportProducts({ products, onProductsChange }: Props) {
           if (isRawRow(rows[i])) {
             // どうしてrowIndex求めるときに＋2をするの？
             // →rows配列はインデックスが0スタート。Excel側では1行目がヘッダー。2行目から商品が入る。Excelと同じ行番号をいれるためには+2が必要
+            // TODO: ここでproductがnullの可能性も含む
+            // どうする？→productにnullが入る可能性はある？：ないと思う。
             const { product, error } = parseRow(rows[i], i + 2);
             // エラーの処理を先にやるほうが読みやすいらしい
             if (error) {
               parseErrors.push(error);
-            } else {
+            } else if (product) {
+              // ここのエラーの直し方は？
+              // newProductsの型にnullの可能性も入れておく
               newProducts.push(product);
             }
           }
