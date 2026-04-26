@@ -35,11 +35,16 @@ type RawRow = {
 /**
  * parseRow関数の戻り値の型
  * Product型はimportした
+ * parseRowの結果は2パターン
+ * 1．エラーがなかった場合、絶対に Product があるよ
+ * 2．エラーがあったらそれが文字列、Productはnull
  */
-type ParseRowResult = {
-  product: Product | null;
-  error: string | null;
-};
+type ParseRowResult =
+  | {
+      product: Product;
+      error: null;
+    }
+  | { product: null; error: string };
 
 /**
  * 1行分のデータをバリデーションして、Productオブジェクトに変換する
@@ -263,14 +268,16 @@ export default function ImportProducts({ products, onProductsChange }: Props) {
             // →rows配列はインデックスが0スタート。Excel側では1行目がヘッダー。2行目から商品が入る。Excelと同じ行番号をいれるためには+2が必要
             // TODO: ここでproductがnullの可能性も含む
             // どうする？→productにnullが入る可能性はある？：ないと思う。
-            const { product, error } = parseRow(rows[i], i + 2);
+            //  分割代入より、一括で変数にオブジェクトを代入
+            const parseRowResult = parseRow(rows[i], i + 2);
             // エラーの処理を先にやるほうが読みやすいらしい
-            if (error) {
-              parseErrors.push(error);
-            } else if (product) {
-              // ここのエラーの直し方は？
-              // newProductsの型にnullの可能性も入れておく
-              newProducts.push(product);
+            //  parseRowの戻り値は2パターン、nullじゃない方を採用する処理を書くとエラーにならない
+            // errorがnullだったらProductをpushする
+            if (parseRowResult.error !== null) {
+              parseErrors.push(parseRowResult.error);
+            } else {
+              // errorがnullなら絶対にparseRowResult.productがあるからそれをプッシュする
+              newProducts.push(parseRowResult.product);
             }
           }
         }
