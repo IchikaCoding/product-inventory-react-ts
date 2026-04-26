@@ -216,7 +216,10 @@ export default function ImportProducts({ products, onProductsChange }: Props) {
         // -------------ここまで2026-03-13----------------
         // シートをJSON配列に変換（ヘッダー行をキーとして使う）
         // rowsはRawRow型の値が入ってる配列
-        const rows: RawRow[] = utils.sheet_to_json(sheet);
+        // ! sheet_to_jsonメソッドを使用した時に、受け取るデータの型は指定する
+        // 理由は、any のまま扱う時間を減らして、以降のコードを型付きで書くため
+        // そしたらrows: RawRow[]は不要になる！
+        const rows = utils.sheet_to_json<RawRow[]>(sheet);
         if (rows.length === 0) {
           setErrors(["The file is empty or has no data rows."]);
           setSuccessMessage("");
@@ -229,17 +232,17 @@ export default function ImportProducts({ products, onProductsChange }: Props) {
         // throwだとエラーが出たときに止まっちゃうから細かい行エラーを出せない
         const parseErrors = [];
         // rowsはRawRow[]じゃない可能性がある。生データだからうまく取得できたかわからないから！
-        // TODO: ここにRawRow型かチェックする処理を追加
-        // TODO: for の中で isRawRow(rows[i]) をチェックしてから parseRow を呼ぶ
+        // for の中で isRawRow(rows[i]) をチェックしてから parseRow を呼ぶ
         // 引数はrow、返り値はboolean
         // rowがRawRow型ならtrue
         // rowとRawRowの型が一致しているときという条件が書きたい
+        // TODO: この処理は他のところでも利用する事になったら分割しよう♪
         function isRawRow(row: unknown): row is RawRow {
           // falseにしたい処理は？配列、null、オブジェクトじゃない時
           // trueにしたいとき？RawRowのプロパティが揃っているとき
           if (row === null || typeof row !== "object" || Array.isArray(row))
             return false;
-          // プロパティをLiteral型として固定します
+          // プロパティをLiteral型として固定します→as const を使用する
           // rowのプロパティを含むかどうかをチェックします
           const Property_Key = [
             "category",
@@ -247,8 +250,8 @@ export default function ImportProducts({ products, onProductsChange }: Props) {
             "price",
             "stocked",
           ] as const;
-          Property_Key.every((key) => key in row);
-          return true;
+          // TODO: これの結果がboolean
+          return Property_Key.every((key) => key in row);
         }
         // データを受け取る、0個じゃないことを確認する、
         // parseRowをする前にrowsの要素がRawRow型であるかどうかを確認する
