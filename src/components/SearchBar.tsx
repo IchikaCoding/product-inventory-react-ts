@@ -1,0 +1,86 @@
+import type { Dispatch, SetStateAction } from "react";
+/**
+ * 入力するフォーム部分を描画するためのコンポーネント
+ * @param {Object} props
+ * @param {string} props.filterText
+ * @param {boolean} props.inStockOnly
+ * @param {string} props.filterCategory
+ * @param {(value: string) => void} props.onFilterCategoryChange
+ * @param {(value: string) => void} props.onFilterTextChange
+ * @param {(value: boolean) => void} props.onInStockOnlyChange
+ * @returns {JSX.Element} 検索画面を表示
+ */
+
+// TODO: SetStateAction<string>があっているのか確認する
+// TODO: Props型にonFilterTextChange,onInStockOnlyChangeの型を追加する
+type Props = {
+  filterText: string;
+  inStockOnly: boolean;
+  filterCategory: string;
+  onFilterCategoryChange: Dispatch<SetStateAction<string>>;
+};
+
+export default function SearchBar({
+  filterText,
+  inStockOnly,
+  filterCategory,
+  onFilterCategoryChange,
+  onFilterTextChange,
+  onInStockOnlyChange,
+}) {
+  return (
+    <form>
+      <div className="mb-3">
+        <label htmlFor="search-product-name" className="form-label">
+          Product name :
+        </label>
+        <input
+          id="search-product-name"
+          type="text"
+          placeholder="Search..."
+          value={filterText}
+          onChange={(e) => {
+            onFilterTextChange(e.target.value);
+          }}
+          className="form-control"
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="filter-category-select" className="form-label">
+          Category selector :
+        </label>
+        {/* カテゴリのセレクト要素を入れたい */}
+        {/* valueでfilterCategoryというstateを代入しているから初期値はstateの初期値が採用される。selectedで初期値をしても意味なし！ */}
+        {/* 入力値はここで取得 */}
+        <select
+          name="filterCategory"
+          id="filter-category-select"
+          value={filterCategory}
+          onChange={(e) => {
+            onFilterCategoryChange(e.target.value);
+          }}
+          className="form-select"
+        >
+          <option value="All">All</option>
+          <option value="Fruits">Fruits</option>
+          <option value="Vegetables">Vegetables</option>
+          <option value="Snacks">Snacks</option>
+        </select>
+      </div>
+      <div className="mb-3 form-check">
+        <input
+          id="stock-checkbox"
+          type="checkbox"
+          checked={inStockOnly}
+          onChange={(e) => {
+            onInStockOnlyChange(e.target.checked);
+          }}
+          className="form-check-input"
+        />
+        <label htmlFor="stock-checkbox" className="form-check-label">
+          Only show products in stock :
+        </label>
+      </div>
+    </form>
+  );
+}
