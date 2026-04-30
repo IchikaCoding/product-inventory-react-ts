@@ -151,6 +151,7 @@ export default function ImportProducts({ products, onProductsChange }: Props) {
   // このコンポーネント内で表示非表示を管理するから、ここでstateを宣言している
   // stateにしてエラーと成功したときのメッセージを表示できるようにしている
   // string[]は文字列しか入らない配列ですよとの意味
+  // useState<T>()の<T>は引数の型注釈になる
   const [errors, setErrors] = useState<string[]>([]);
   const [successMessage, setSuccessMessage] = useState<string>("");
 
