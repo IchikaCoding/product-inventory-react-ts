@@ -11,13 +11,23 @@ import type { Dispatch, SetStateAction } from "react";
  * @returns {JSX.Element} 検索画面を表示
  */
 
-// TODO: SetStateAction<string>があっているのか確認する
-// TODO: Props型にonFilterTextChange,onInStockOnlyChangeの型を追加する
+const FILTER_CATEGORIES = ["All", "Fruits", "Vegetables", "Snacks"] as const;
+
+// 値である FILTER_CATEGORIES の型を取り出す
+// [number]をするとインデックスでアクセスした時に要素の型を取り出せるようになる
+// →その結果、"All" | "Fruits" | "Vegetables" | "Snacks"の意味になる！
+// TODO: この型を使って、セレクト要素の選択肢を4択に狭める処理を書く
+type FilterCategory = (typeof FILTER_CATEGORIES)[number];
+
 type Props = {
   filterText: string;
   inStockOnly: boolean;
-  filterCategory: string;
+  filterCategory: FilterCategory;
+  // TODO: カテゴリは4択だからSetStateActionの返り値型もユニオン型にしておきたい！
   onFilterCategoryChange: Dispatch<SetStateAction<string>>;
+  // フィルターテキストは商品名を入れるところです
+  onFilterTextChange: Dispatch<SetStateAction<string>>;
+  onInStockOnlyChange: Dispatch<SetStateAction<boolean>>;
 };
 
 export default function SearchBar({
@@ -27,7 +37,7 @@ export default function SearchBar({
   onFilterCategoryChange,
   onFilterTextChange,
   onInStockOnlyChange,
-}) {
+}: Props) {
   return (
     <form>
       <div className="mb-3">
@@ -57,7 +67,7 @@ export default function SearchBar({
           id="filter-category-select"
           value={filterCategory}
           onChange={(e) => {
-            onFilterCategoryChange(e.target.value);
+            onFilterCategoryChange(e.target.value as FilterCategory);
           }}
           className="form-select"
         >
