@@ -71,10 +71,20 @@ export default function SearchBar({
           }}
           className="form-select"
         >
-          <option value="All">All</option>
+          {/* 配列からoptionを生成する処理 */}
+          {/* キーはなんのために書くのでしょうか？
+          Reactが効率よく画面描画できるようにするため */}
+          {FILTER_CATEGORIES.map((category) => {
+            return (
+              <option value={category} key={category}>
+                {category}
+              </option>
+            );
+          })}
+          {/* <option value="All">All</option>
           <option value="Fruits">Fruits</option>
           <option value="Vegetables">Vegetables</option>
-          <option value="Snacks">Snacks</option>
+          <option value="Snacks">Snacks</option> */}
         </select>
       </div>
       <div className="mb-3 form-check">
