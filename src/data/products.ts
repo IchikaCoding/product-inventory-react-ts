@@ -1,10 +1,11 @@
 // 型推論できるから、堅注釈は省略可能です
 export const PRODUCTS_KEY: string = "productsKey";
 
+type Category = "Fruits" | "Vegetables" | "Snacks";
 // FilterableProductTable.tsxで型をインポートするかもしれないから念のためexportしました
 export type Product = {
   id: string;
-  category: string;
+  category: Category;
   price: number;
   stocked: boolean;
   name: string;

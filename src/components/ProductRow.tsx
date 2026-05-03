@@ -85,6 +85,8 @@ export default function ProductRow({
     Vegetables: "text-bg-success",
     Snacks: "text-bg-danger",
   };
+  // エラー原因：categoryClassMapは3つのカテゴリのみが選択肢。product.categoryはstring型で広すぎた
+  // エラー解決策：product.categoryの選択肢を3つに絞った
   const badgeTextBg = categoryClassMap[product.category] ?? "text-bg-secondary";
 
   if (editingId === product.id) {
