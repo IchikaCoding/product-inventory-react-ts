@@ -223,6 +223,9 @@ export default function ProductRow({
             className="btn btn-danger w-100"
             ref={(el) => {
               // TODO: set関数とかdelete関数ってどこから来たの？
+              // TODO: deleteBtnRefsがnullだった時の対処法
+              // deleteBtnRefsがnullじゃないとき
+              // nullのとき
               if (el) {
                 deleteBtnRefs.current.set(product.id, el);
               } else {
