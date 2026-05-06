@@ -1,4 +1,9 @@
-import { useRef, type SetStateAction } from "react";
+import {
+  useRef,
+  type SetStateAction,
+  type Dispatch,
+  type RefObject,
+} from "react";
 import type { Product } from "../data/products.ts";
 
 /**
@@ -22,9 +27,9 @@ type ProductRowProps = {
   editingId: string | null;
   handleEditButton: (editingBtnId: string | null) => void;
   // TODO: SetStateAction<string>にした理由は、draftNameが文字列だったから。これ合ってる？
-  setDraftName: React.Dispatch<SetStateAction<string>>;
-  setDraftPrice: React.Dispatch<SetStateAction<string>>;
-  setDraftStocked: React.Dispatch<SetStateAction<boolean>>;
+  setDraftName: Dispatch<SetStateAction<string>>;
+  setDraftPrice: Dispatch<SetStateAction<string>>;
+  setDraftStocked: Dispatch<SetStateAction<boolean>>;
   handleSaveButton: (
     saveBtnId: string,
     nameInputEl: HTMLInputElement | null,
@@ -40,7 +45,7 @@ type ProductRowProps = {
   // IDは文字列ってことも必要かも？
   // このコは、削除ボタンにfocusを当てるために保持している
   // 推奨は、RefObject. 非推奨はMutableRefObject
-  deleteBtnRefs: React.RefObject<Map<string, HTMLButtonElement>>;
+  deleteBtnRefs: RefObject<Map<string, HTMLButtonElement>>;
 };
 
 export default function ProductRow({
