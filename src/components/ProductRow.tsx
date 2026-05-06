@@ -226,7 +226,7 @@ export default function ProductRow({
             onClick={() => handleDeleteButton(product.id)}
             className="btn btn-danger w-100"
             // reactがDOM要素渡す👉️elは要素削除されたときとかnullになる
-            ref={(el: HTMLElement | null) => {
+            ref={(el: HTMLButtonElement | null) => {
               // TODO: set関数とかdelete関数ってどこから来たの？
               // TODO: deleteBtnRefsがnullだった時の対処法
               // deleteBtnRefsがnullじゃないとき
