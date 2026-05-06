@@ -51,7 +51,11 @@ type ProductRowProps = {
   draftPrice: string;
   draftStocked: boolean;
   errorMessage: string | null;
-  deleteBtnRefs: HTMLButtonElement | null;
+  // Refオブジェクトだよっていうこと、nullの可能性があること、HTMLButtonElementのRefですと伝えたい。
+  // IDは文字列ってことも必要かも？
+  // このコは、削除ボタンにfocusを当てるために保持している
+  // 推奨は、RefObject. 非推奨はMutableRefObject
+  deleteBtnRefs: React.RefObject<Map<string, HTMLButtonElement>>;
 };
 
 export default function ProductRow({
@@ -227,9 +231,10 @@ export default function ProductRow({
               // deleteBtnRefsがnullじゃないとき
               // nullのとき
               if (el) {
+                // これが複数系なのは、保存したdeleteBtnRefに更にMapに追加していくから複数形
                 deleteBtnRefs.current.set(product.id, el);
               } else {
-                // deleteするのはどうして？
+                // deleteするのはどうして？→Mapから削除
                 // elseになるのは削除ボタンが消えたとき（編集モード、検索で除外されたとき、削除された瞬間とか）
                 // 要素がないときにidを消さないと、FilterableProductTable.jsxでgetしたときに画面の状態とMapの中身がズレてしまう
                 deleteBtnRefs.current.delete(product.id);
