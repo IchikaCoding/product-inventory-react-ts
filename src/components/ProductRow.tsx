@@ -23,9 +23,11 @@ import type { Product } from "../data/products.ts";
 // 一応、handleEditButtonはeditingIdに習ってnullを追加した
 type ProductRowProps = {
   product: Product;
-  handleDeleteButton: (deleteBtnId: string | null) => void;
+  handleDeleteButton: (deleteBtnId: string) => void;
+  // 編集が終わったらIDはnullになる。
   editingId: string | null;
-  handleEditButton: (editingBtnId: string | null) => void;
+  // product.idは必ず文字列。nullの可能性は基本ない。string型だけでOK
+  handleEditButton: (editingBtnId: string) => void;
   // TODO: SetStateAction<string>にした理由は、draftNameが文字列だったから。これ合ってる？
   setDraftName: Dispatch<SetStateAction<string>>;
   setDraftPrice: Dispatch<SetStateAction<string>>;
@@ -70,8 +72,8 @@ export default function ProductRow({
   ) : (
     <span style={{ color: "red" }}>{product.name}</span>
   );
-  const priceInputRef = useRef(null);
-  const nameInputRef = useRef(null);
+  const priceInputRef = useRef<HTMLInputElement | null>(null);
+  const nameInputRef = useRef<HTMLInputElement | null>(null);
   // カテゴリ別で色を指定したオブジェクトを用意する
   // それのproductのカテゴリに一致する色を変数に入れて置く
   const categoryClassMap = {
