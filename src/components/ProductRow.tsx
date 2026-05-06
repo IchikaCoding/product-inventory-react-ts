@@ -12,23 +12,8 @@ import type { Product } from "../data/products.ts";
 
 /**
  * 商品を一つずつ表示しているコンポーネント
- * @param {Object} props
- * @param {Product} props.product Products配列が持っている一つずつのオブジェクト
- * @param {(deleteBtnId: string|null) => void} props.handleDeleteButton
- * @param {string | null} props.editingId
- * @param {(editingBtnId: string) => void} props.handleEditButton
- * @param {(value: string) => void} props.setDraftName
- * @param {(value: string) => void} props.setDraftPrice
- * @param {(value: boolean) => void} props.setDraftStocked
- * @param {(saveBtnId: string, nameInputEl: HTMLInputElement | null, priceInputEl: HTMLInputElement | null)=>void} props.handleSaveButton
- * @param {(value: string)=>void} props.handleCancelButton
- * @param {string} props.draftName
- * @param {string} props.draftPrice
- * @param {boolean} props.draftStocked
- * @param {string | null} props.errorMessage
  * @returns {JSX.Element}
  */
-
 // TODO: editingIdってnullの可能性はありますか？editingIdは編集ボタンが押された要素のID→ボタン要素は絶対あるけど、IDが無い可能性もある
 // 一応、handleEditButtonはeditingIdに習ってnullを追加した
 type ProductRowProps = {
