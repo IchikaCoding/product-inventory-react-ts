@@ -7,26 +7,17 @@ import {
 import type { Product } from "../data/products.ts";
 
 /**
- * @typedef {Object} Product
- * @property {string} category
- * @property {string} id
- * @property {string} name
- * @property {number} price
- * @property {boolean} stocked
- */
-
-/**
  * 商品を一つずつ表示しているコンポーネント
  * @returns {JSX.Element}
  */
-// TODO: editingIdってnullの可能性はありますか？editingIdは編集ボタンが押された要素のID→ボタン要素は絶対あるけど、IDが無い可能性もある
-// 一応、handleEditButtonはeditingIdに習ってnullを追加した
+// editingIdってnullの可能性はありますか？
+// editingIdは編集ボタンが押された要素のID→ボタン要素は絶対あるけど、編集終わったらなくなる👉️nullもあるよ
 type ProductRowProps = {
   product: Product;
   handleDeleteButton: (deleteBtnId: string) => void;
   // 編集が終わったらIDはnullになる。
   editingId: string | null;
-  // product.idは必ず文字列。nullの可能性は基本ない。string型だけでOK
+  // product.idは必ず文字列。product.id自体の型にnullの可能性がない👉️引数としてnullが入る可能性は基本ない。string型だけでOK
   handleEditButton: (editingBtnId: string) => void;
   // TODO: SetStateAction<string>にした理由は、draftNameが文字列だったから。これ合ってる？
   // TODO: Dispatchは使い方合っているのか調べる
@@ -38,16 +29,17 @@ type ProductRowProps = {
     nameInputEl: HTMLInputElement | null,
     priceInputEl: HTMLInputElement | null,
   ) => void;
-  // TODO: handleCancelButton関数にはnullの処理がなかったからvalueはstring型のみにした、大丈夫そ？
+  // 引数はproduct.id。これにstring型しか入らないので、valueはstring型のみにした
   handleCancelButton: (value: string) => void;
   draftName: string;
   draftPrice: string;
   draftStocked: boolean;
   errorMessage: string | null;
-  // Refオブジェクトだよっていうこと、nullの可能性があること、HTMLButtonElementのRefですと伝えたい。
+  // Refオブジェクトだよっていうこと、HTMLButtonElementのRefですと伝えたい。
   // IDは文字列ってことも必要かも？
   // このコは、削除ボタンにfocusを当てるために保持している
   // 推奨は、RefObject. 非推奨はMutableRefObject
+  // 初期値が空のMapオブジェクトだからnullの可能性なしとする
   deleteBtnRefs: RefObject<Map<string, HTMLButtonElement>>;
 };
 
@@ -77,7 +69,13 @@ export default function ProductRow({
   const nameInputRef = useRef<HTMLInputElement | null>(null);
   // カテゴリ別で色を指定したオブジェクトを用意する
   // それのproductのカテゴリに一致する色を変数に入れて置く
-  const categoryClassMap = {
+  //
+  // Record<キーの型, 値の型>
+  // Product["category"] は、Product 型の category プロパティの型を取り出すという意味
+  // キーには Product["category"] の型、つまり "Fruits" | "Vegetables" | "Snacks" が使える
+  // 値は "text-bg-danger" などの CSS クラス名なので string 型
+
+  const categoryClassMap: Record<Product["category"], string> = {
     Fruits: "text-bg-warning",
     Vegetables: "text-bg-success",
     Snacks: "text-bg-danger",

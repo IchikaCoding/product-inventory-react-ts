@@ -36,6 +36,9 @@ export default function FilterableProductTable() {
   // 次にフォーカスを当てたい商品のIDを保管するRef
   const productFocusedIDRef = useRef(null);
   // ProductRowのDeleteボタンの要素をIDで取得したものを持っておくRef
+  // TODO:: ProductRowの使う側でMap使う前提したから以下の型を追加しておく
+  // const deleteBtnRefs = useRef(new Map<string, HTMLButtonElement>());
+  // 初期値からMapを作成している👉️nullの可能性はゼロ、空のMapオブジェクトが作られているから！
   const deleteBtnRefs = useRef(new Map());
   // productsをstateにして、更新もここで行われる
   // リロードされると、またモックデータで初期化される
