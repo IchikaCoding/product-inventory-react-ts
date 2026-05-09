@@ -29,6 +29,7 @@ type ProductRowProps = {
   // product.idは必ず文字列。nullの可能性は基本ない。string型だけでOK
   handleEditButton: (editingBtnId: string) => void;
   // TODO: SetStateAction<string>にした理由は、draftNameが文字列だったから。これ合ってる？
+  // TODO: Dispatchは使い方合っているのか調べる
   setDraftName: Dispatch<SetStateAction<string>>;
   setDraftPrice: Dispatch<SetStateAction<string>>;
   setDraftStocked: Dispatch<SetStateAction<boolean>>;
