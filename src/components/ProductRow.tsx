@@ -74,7 +74,7 @@ export default function ProductRow({
   // Product["category"] は、Product 型の category プロパティの型を取り出すという意味
   // キーには Product["category"] の型、つまり "Fruits" | "Vegetables" | "Snacks" が使える
   // 値は "text-bg-danger" などの CSS クラス名なので string 型
-  // TODO: これってMapオブジェクトなのでは？Recordは普通のオブジェクトを書くときに使う
+  // Recordは普通のオブジェクトを書くときに使う👉️MapオブジェクトではないからこれでOK
   const categoryClassMap: Record<Product["category"], string> = {
     Fruits: "text-bg-warning",
     Vegetables: "text-bg-success",
