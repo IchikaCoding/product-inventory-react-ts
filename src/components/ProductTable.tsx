@@ -2,28 +2,7 @@ import type React from "react";
 import ProductCategoryRow from "./ProductCategoryRow";
 import ProductRow from "./ProductRow";
 import type { Dispatch, SetStateAction, RefObject } from "react";
-// import type { Product } from "../data/products";
-
-/**
- * 商品を表示する部分の描画を担当しているコンポーネント
- * @param {Object} props
- * @param {string} props.filterText
- * @param {boolean} props.inStockOnly
- * @param {(deleteBtnId: string) => void} props.handleDeleteButton
- * @param {string | null} props.editingId
- * @param {(editingBtnId: string) => void} props.handleEditButton
- * @param {(value: string) => void} props.setDraftName
- * @param {(value: string) => void} props.setDraftPrice
- * @param {(value: boolean) => void} props.setDraftStocked
- * @param {(value: string) => void} props.handleSaveButton
- * @param {(cancelBtnId: string) => void} props.handleCancelButton
- * @param {string} props.draftName
- * @param {string} props.draftPrice
- * @param {boolean} props.draftStocked
- * @param {string | null} props.errorMessage
- * @param {Array} props.visibleProducts TODO: ここの書き方が違うかも？！
- * @returns {JSX.Element}
- */
+import type { Product } from "../data/products";
 
 type ProductTableProps = {
   filterText: string;
@@ -33,8 +12,8 @@ type ProductTableProps = {
   handleEditButton: (editingBtnId: string) => void;
   handleSaveButton: (
     saveBtnId: string,
-    nameInputEl: HTMLInputElement,
-    priceInputEl: HTMLInputElement,
+    nameInputEl: HTMLInputElement | null,
+    priceInputEl: HTMLInputElement | null,
   ) => void;
   handleCancelButton: (cancelBtnId: string) => void;
   setDraftName: Dispatch<SetStateAction<string>>;
@@ -44,11 +23,14 @@ type ProductTableProps = {
   draftPrice: string;
   draftStocked: boolean;
   errorMessage: string | null;
-  visibleProducts: string[];
+  visibleProducts: Product[];
   // これのMapオブジェクトの実際のキーと値がわからなかった👉️ProductRowのsetを確認したらわかった
   deleteBtnRefs: RefObject<Map<string, HTMLButtonElement>>;
 };
 
+/**
+ * 商品を表示する部分の描画を担当しているコンポーネント
+ */
 export default function ProductTable({
   // products,
   filterText,
@@ -85,7 +67,8 @@ export default function ProductTable({
   // console.log("filterCategoryProducts", filterCategoryProducts);
 
   // forEachは配列の要素一つずつに指定した処理をするメソッド
-  visibleProducts.forEach((product) => {
+  // visibleProductsは画面表示されている配列（フィルターがついていたらそれのみが反映されている）
+  visibleProducts.forEach((product: Product) => {
     // 商品の名前を全部小文字にしたものと、検索したい文字として入力された小文字文字列が一致しない場合はリターンする処理
     // indexOf()は文字列と検索したい文字列が一致しなかったら-1を返すメソッド
     if (product.name.toLowerCase().indexOf(filterText.toLowerCase()) === -1) {
