@@ -223,17 +223,18 @@ export default function FilterableProductTable() {
     setDeleteBtnId(null);
     lastFocusedRef.current?.focus();
   }
-  // 画面表示の配列を作成する関数を作成する
+  // 画面表示の配列を作成する関数
   // categoryでフィルターしたProductsたちを返す
   // 引数は汎用関数にしたいから、FilterableProductTable.jsx内でstateとして宣言されているものは引数にしておく
   // 👉️他のコンポーネントでも使いやすいかも
   function getVisibleProducts(products, filterCategory) {
-    // TODO: productsの手前でカテゴリ順に並び替えること
+    // TODO: productsの手前でカテゴリ順（カテゴリはアルファベット順）に並び替えること
     const sortProducts = products.toSorted((a, b) =>
       a.category.localeCompare(b.category),
     );
     //nullなら全部合格。カテゴリが一致するものがあったら一致のカテゴリだけ合格
     const filterCategoryProducts = sortProducts.filter((product) => {
+      // TODO: Allのときってどうして全部帰ってくるの？フィルターカテゴリと商品のかテゴリが一致したらそれを返すならまだわかる
       return filterCategory === "All" || filterCategory === product.category;
     });
     console.log("filterCategoryProducts", filterCategoryProducts);
