@@ -38,9 +38,8 @@ export default function FilterableProductTable() {
   // ProductRowのDeleteボタンの要素をIDで取得したものを持っておくRef
 
   // 初期値からMapを作成している👉️nullの可能性はゼロ、空のMapオブジェクトが作られているから！
-  const deleteBtnRefs = useRef<Map<string, HTMLButtonElement | null>>(
-    new Map(),
-  );
+  // TODO: この初期値のからのMapは考慮されているのだろうか？
+  const deleteBtnRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
   // productsをstateにして、更新もここで行われる
   // リロードされると、またモックデータで初期化される
   // TODO: これ合っている？

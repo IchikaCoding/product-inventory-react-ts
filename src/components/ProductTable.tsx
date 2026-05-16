@@ -46,7 +46,7 @@ type ProductTableProps = {
   visibleProducts: string[];
   // TODO: これのMapオブジェクトの実際のキーと値がわからなかった
   // 👉️確認する方法を調べる
-  deleteBtnRefs: RefObject<Map<string, HTMLButtonElement | null>>;
+  deleteBtnRefs: RefObject<Map<string, HTMLButtonElement>>;
 };
 
 export default function ProductTable({
