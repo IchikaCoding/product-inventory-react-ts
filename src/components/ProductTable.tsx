@@ -1,5 +1,6 @@
 import ProductCategoryRow from "./ProductCategoryRow";
 import ProductRow from "./ProductRow";
+import type { Dispatch, SetStateAction, RefObject } from "react";
 // import type { Product } from "../data/products";
 
 /**
@@ -14,7 +15,7 @@ import ProductRow from "./ProductRow";
  * @param {(value: string) => void} props.setDraftPrice
  * @param {(value: boolean) => void} props.setDraftStocked
  * @param {(value: string) => void} props.handleSaveButton
- * @param {(value: string) => void} props.handleCancelButton
+ * @param {(cancelBtnId: string) => void} props.handleCancelButton
  * @param {string} props.draftName
  * @param {string} props.draftPrice
  * @param {boolean} props.draftStocked
@@ -29,17 +30,23 @@ type ProductTableProps = {
   handleDeleteButton: (deleteBtnId: string) => void;
   editingId: string | null;
   handleEditButton: (editingBtnId: string) => void;
-  handleSaveButton;
-  handleCancelButton;
-  setDraftName;
-  setDraftPrice;
-  setDraftStocked;
-  draftName;
-  draftPrice;
-  draftStocked;
-  errorMessage;
-  visibleProducts;
-  deleteBtnRefs;
+  handleSaveButton: (
+    saveBtnId: string,
+    nameInputEl: HTMLInputElement,
+    priceInputEl: HTMLInputElement,
+  ) => void;
+  handleCancelButton: (cancelBtnId: string) => void;
+  setDraftName: Dispatch<SetStateAction<string>>;
+  setDraftPrice: Dispatch<SetStateAction<string>>;
+  setDraftStocked: Dispatch<SetStateAction<boolean>>;
+  draftName: string;
+  draftPrice: string;
+  draftStocked: boolean;
+  errorMessage: string | null;
+  visibleProducts: string[];
+  // TODO: これのMapオブジェクトの実際のキーと値がわからなかった
+  // 👉️確認する方法を調べる
+  deleteBtnRefs: RefObject<Map<string, HTMLButtonElement>>;
 };
 
 export default function ProductTable({
@@ -61,7 +68,7 @@ export default function ProductTable({
   errorMessage,
   visibleProducts,
   deleteBtnRefs,
-}) {
+}: ProductTableProps) {
   // カテゴリと商品の情報をいれるための配列
   const rows = [];
   // カテゴリが変わったことを判定するための変数
