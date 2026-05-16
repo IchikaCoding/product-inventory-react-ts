@@ -1,3 +1,4 @@
+import type React from "react";
 import ProductCategoryRow from "./ProductCategoryRow";
 import ProductRow from "./ProductRow";
 import type { Dispatch, SetStateAction, RefObject } from "react";
@@ -69,9 +70,10 @@ export default function ProductTable({
   deleteBtnRefs,
 }: ProductTableProps) {
   // カテゴリと商品の情報をいれるための配列
-  const rows = [];
+  // 空の配列か、中身がProductRowコンポーネントの型注釈を書いた
+  const rows: React.ReactElement[] = [];
   // カテゴリが変わったことを判定するための変数
-  let lastCategory = null;
+  let lastCategory: string | null = null;
   // // TODO: productsの手前でカテゴリ順に並び替えること
   // const sortProducts = products.toSorted((a, b) =>
   //   a.category.localeCompare(b.category),
