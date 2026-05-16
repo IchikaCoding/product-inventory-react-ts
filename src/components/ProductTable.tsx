@@ -44,8 +44,7 @@ type ProductTableProps = {
   draftStocked: boolean;
   errorMessage: string | null;
   visibleProducts: string[];
-  // TODO: これのMapオブジェクトの実際のキーと値がわからなかった
-  // 👉️確認する方法を調べる
+  // これのMapオブジェクトの実際のキーと値がわからなかった👉️ProductRowのsetを確認したらわかった
   deleteBtnRefs: RefObject<Map<string, HTMLButtonElement>>;
 };
 
