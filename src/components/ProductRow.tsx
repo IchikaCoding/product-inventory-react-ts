@@ -40,7 +40,7 @@ type ProductRowProps = {
   // このコは、削除ボタンにfocusを当てるために保持している
   // 推奨は、RefObject. 非推奨はMutableRefObject
   // 初期値が空のMapオブジェクトだからnullの可能性なしとする
-  deleteBtnRefs: RefObject<Map<string, HTMLButtonElement>>;
+  deleteBtnRefs: RefObject<Map<string, HTMLButtonElement | null>>;
 };
 
 export default function ProductRow({
