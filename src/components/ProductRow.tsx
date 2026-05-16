@@ -40,7 +40,7 @@ type ProductRowProps = {
   // このコは、削除ボタンにfocusを当てるために保持している
   // 推奨は、RefObject. 非推奨はMutableRefObject
   // 初期値が空のMapオブジェクトだからnullの可能性なしとする
-  deleteBtnRefs: RefObject<Map<string, HTMLButtonElement | null>>;
+  deleteBtnRefs: RefObject<Map<string, HTMLButtonElement>>;
 };
 
 export default function ProductRow({
@@ -219,9 +219,8 @@ export default function ProductRow({
             // reactがDOM要素渡す👉️elは要素削除されたときとかnullになる
             ref={(el: HTMLButtonElement | null) => {
               // TODO: set関数とかdelete関数ってどこから来たの？
-              // TODO: deleteBtnRefsがnullだった時の対処法
-              // deleteBtnRefsがnullじゃないとき
-              // nullのとき
+              //  deleteBtnRefsがnullだった時の対処法👉️nullならDeleteさせる
+
               if (el) {
                 // これが複数系なのは、保存したdeleteBtnRefに更にMapに追加していくから複数形
                 deleteBtnRefs.current.set(product.id, el);
