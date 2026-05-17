@@ -23,7 +23,8 @@ import { createPortal } from "react-dom";
  */
 export default function FilterableProductTable() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const lastFocusedRef = useRef<HTMLButtonElement | null>(null);
+  // focusを当てるだけのために要素を保存する用。Buttonだけとは限らないし、`.focus()`をするならHTMLElementにした
+  const lastFocusedRef = useRef<HTMLElement | null>(null);
   const [deleteBtnId, setDeleteBtnId] = useState<string | null>(null);
   // 編集中かどうかを管理するためのState変数。IDで管理する
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -32,7 +33,8 @@ export default function FilterableProductTable() {
   const [draftPrice, setDraftPrice] = useState<string>("");
   const [draftStocked, setDraftStocked] = useState<boolean>(false);
   // 商品の値段が空欄だったときに表示するためのエラーメッセージstate
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  // null = エラーなし  "〇〇" = エラーあり
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   // 次にフォーカスを当てたい商品のIDを保管するRef
   const productFocusedIDRef = useRef<string | null>(null);
   // ProductRowのDeleteボタンの要素をIDで取得したものを持っておくRef
@@ -140,6 +142,7 @@ export default function FilterableProductTable() {
       setErrorMessage(nameError);
       return;
     }
+    // エラーがなかったらnullをいれる→空文字より明確っぽくていいね！
     setErrorMessage(null);
     // 下書きからProducts自体を更新する
     // TODO: 新しく配列を作成→それで更新しないとReactが再描画してくれないかも？
@@ -165,7 +168,7 @@ export default function FilterableProductTable() {
    * 編集モードをCancelしたときの処理
    * @param {*} cancelBtnId
    */
-  function handleCancelButton(cancelBtnId) {
+  function handleCancelButton(cancelBtnId: string) {
     console.log("cancelBtnId", cancelBtnId);
     setEditingId(null);
     // 一回編集ボタンを押したあとにキャンセルしたらエラーメッセージはリセット
@@ -175,9 +178,12 @@ export default function FilterableProductTable() {
    * 削除ボタンを押してモーダルが開く処理
    * @param {string | null} deleteBtnId
    */
-  function handleDeleteButton(deleteBtnId) {
+  function handleDeleteButton(deleteBtnId: string) {
     // delete押す直前にフォーカスが当たっているHTML要素を代入してそれを保存しておく
-    lastFocusedRef.current = document.activeElement;
+    // TODO: 型をNarrowingして、HTMLElementに当てはまるようにする
+    if (document.activeElement instanceof HTMLElement) {
+      lastFocusedRef.current = document.activeElement;
+    }
 
     console.log("lastFocusedRef", lastFocusedRef);
     setIsModalOpen(true);
