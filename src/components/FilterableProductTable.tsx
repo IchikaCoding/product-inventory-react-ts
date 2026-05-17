@@ -83,7 +83,8 @@ export default function FilterableProductTable() {
    * 編集開始の準備だけをする処理
    * @param {*} editBtnId
    */
-  // TODO: editingBtnIdとして書き直したいかも
+  // TODO: editingBtnIdとして書き直したいかも→これ直しても良さそう
+  // editBtnIdを受け取ったら、state変数のeditingIdにセットしている
   function handleEditButton(editBtnId: string) {
     // 編集中のIDをセットする
     setEditingId(editBtnId);
