@@ -248,7 +248,7 @@ export default function FilterableProductTable() {
   // categoryでフィルターしたProductsたちを返す
   // 引数は汎用関数にしたいから、FilterableProductTable.jsx内でstateとして宣言されているものは引数にしておく
   // 👉️他のコンポーネントでも使いやすいかも
-  function getVisibleProducts(products, filterCategory) {
+  function getVisibleProducts(products: Product[], filterCategory: string) {
     // TODO: productsの手前でカテゴリ順（カテゴリはアルファベット順）に並び替えること
     const sortProducts = products.toSorted((a, b) =>
       a.category.localeCompare(b.category),
