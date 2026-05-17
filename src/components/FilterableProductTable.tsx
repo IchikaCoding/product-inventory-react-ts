@@ -107,7 +107,11 @@ export default function FilterableProductTable() {
   }
 
   // ここでデータの更新がうまくいっていない！→商品の値段がしっかりできていません
-  function handleSaveButton(saveBtnId, nameInputEl, priceInputEl) {
+  function handleSaveButton(
+    saveBtnId: string,
+    nameInputEl: HTMLInputElement | null,
+    priceInputEl: HTMLInputElement | null,
+  ) {
     console.log("saveBtnId", saveBtnId);
     // ! input要素が取得出来なかった場合、reportValidity()の前にnullのガードを入れておくと安心
     if (!nameInputEl || !priceInputEl) {
