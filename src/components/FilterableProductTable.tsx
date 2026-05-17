@@ -4,7 +4,7 @@ import SearchBar from "./SearchBar";
 import ProductTable from "./ProductTable";
 import AddProductForm from "./AddProductForm";
 import ImportProducts from "./ImportProducts";
-import { PRODUCTS, PRODUCTS_KEY } from "../data/products";
+import { PRODUCTS, PRODUCTS_KEY, type Product } from "../data/products";
 import {
   validationPrice,
   validationTrimmedName,
@@ -205,11 +205,14 @@ export default function FilterableProductTable() {
 
     // TODO: productsの中身を調べて、currentProductIndexがあっているのか確認する
     console.log("products", products);
-    const sortedProducts = getVisibleProducts(products, filterCategory);
+    const sortedProducts: Product[] = getVisibleProducts(
+      products,
+      filterCategory,
+    );
     // TODO: フォーカスを次の行へ移動
     // deleteBtnIdから商品のインデックスを取得する方法
     const currentProductIndex = sortedProducts.findIndex(
-      (product) => product.id === deleteBtnId,
+      (product: Product) => product.id === deleteBtnId,
     );
     // 下の行のインデックスがあるならそのIDを取得
     // それがないなら上の行のインデックスのIDを取得
