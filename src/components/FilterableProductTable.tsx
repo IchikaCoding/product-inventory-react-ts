@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import Modal from "./Modal";
 import SearchBar from "./SearchBar";
-// import ProductTable from "./ProductTable";
+import ProductTable from "./ProductTable";
 import AddProductForm from "./AddProductForm";
 import ImportProducts from "./ImportProducts";
 import { PRODUCTS, PRODUCTS_KEY } from "../data/products";
@@ -22,19 +22,19 @@ import { createPortal } from "react-dom";
  * @returns {JSX.Element}
  */
 export default function FilterableProductTable() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const lastFocusedRef = useRef(null);
-  const [deleteBtnId, setDeleteBtnId] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const lastFocusedRef = useRef<HTMLButtonElement | null>(null);
+  const [deleteBtnId, setDeleteBtnId] = useState<string | null>(null);
   // 編集中かどうかを管理するためのState変数。IDで管理する
-  const [editingId, setEditingId] = useState(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   // 編集中の商品名と価格は下書きstate変数に入れておく
-  const [draftName, setDraftName] = useState("");
-  const [draftPrice, setDraftPrice] = useState("");
-  const [draftStocked, setDraftStocked] = useState(false);
+  const [draftName, setDraftName] = useState<string>("");
+  const [draftPrice, setDraftPrice] = useState<string>("");
+  const [draftStocked, setDraftStocked] = useState<boolean>(false);
   // 商品の値段が空欄だったときに表示するためのエラーメッセージstate
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
   // 次にフォーカスを当てたい商品のIDを保管するRef
-  const productFocusedIDRef = useRef(null);
+  const productFocusedIDRef = useRef<string | null>(null);
   // ProductRowのDeleteボタンの要素をIDで取得したものを持っておくRef
 
   // 初期値からMapを作成している👉️nullの可能性はゼロ、空のMapオブジェクトが作られているから！
@@ -47,12 +47,18 @@ export default function FilterableProductTable() {
   const [products, setProducts] = useState(() => {
     try {
       // 初回表示時にlocalStorageを確認する
-      const storageProducts = localStorage.getItem(PRODUCTS_KEY);
-      const parsedStorageProducts = JSON.parse(storageProducts);
-      // ローカルストレージの中身がなかったらモックデータをいれる
-      if (parsedStorageProducts === null) {
+      // ローカルストレージのデータは文字列かnullのみ。だからこの型にしてみた
+      // TODO: Productの初期値がある場合は、nullの可能性ってあるのかな？
+      const storageProducts: string | null = localStorage.getItem(PRODUCTS_KEY);
+      console.log("storageProducts", storageProducts);
+      // ローカルストレージの中身がnullならモックデータをいれる
+      if (storageProducts === null) {
+        localStorage.setItem(PRODUCTS_KEY, JSON.stringify(PRODUCTS));
         return PRODUCTS;
       }
+
+      const parsedStorageProducts = JSON.parse(storageProducts);
+      console.log("parsedStorageProducts", parsedStorageProducts);
 
       // 配列じゃないとき、もしくは要素がゼロのときはモックデータを返す
       if (
@@ -77,7 +83,8 @@ export default function FilterableProductTable() {
    * 編集開始の準備だけをする処理
    * @param {*} editBtnId
    */
-  function handleEditButton(editBtnId) {
+  // TODO: editingBtnIdとして書き直したいかも
+  function handleEditButton(editBtnId: string) {
     // 編集中のIDをセットする
     setEditingId(editBtnId);
 
@@ -307,7 +314,7 @@ export default function FilterableProductTable() {
         <div className="mb-4 card">
           <div className="card-body">
             <h3 className="card-title mb-3">Product table</h3>
-            {/* <ProductTable
+            <ProductTable
               products={products}
               inStockOnly={inStockOnly}
               filterText={filterText}
@@ -326,7 +333,7 @@ export default function FilterableProductTable() {
               errorMessage={errorMessage}
               visibleProducts={visibleProducts}
               deleteBtnRefs={deleteBtnRefs}
-            /> */}
+            />
           </div>
         </div>
         {/* ここから、Form周りのJSXを書く。AddProductFormコンポーネントはFormだけ描画にしておく */}
