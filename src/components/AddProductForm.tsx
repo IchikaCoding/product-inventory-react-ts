@@ -52,6 +52,7 @@ export default function AddProductForm({ products, onProductsChange }: Props) {
       return;
     }
 
+    // TODO: ここの型を追加しておく。productCategoryがたぶんstringの可能性があるから注意してね
     setErrorMessage(null);
     const newProduct = {
       id: crypto.randomUUID(),
@@ -63,6 +64,7 @@ export default function AddProductForm({ products, onProductsChange }: Props) {
 
     // FilterableProductTableにわたすための一時データ
     // ! ここでエラーが発生→Product[]を追加したらproductsでエラー発生
+    // TODO: productsは型を書いているのにどうしてエラーなのか、考える
     const newProducts: Product[] = [...products, newProduct];
     onProductsChange(newProducts);
   }
