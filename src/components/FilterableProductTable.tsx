@@ -332,10 +332,9 @@ export default function FilterableProductTable() {
           <div className="card-body">
             <h3 className="card-title mb-3">Product table</h3>
             <ProductTable
-              products={products}
+              // ProductTable
               inStockOnly={inStockOnly}
               filterText={filterText}
-              filterCategory={filterCategory}
               handleDeleteButton={handleDeleteButton}
               editingId={editingId}
               handleEditButton={handleEditButton}
