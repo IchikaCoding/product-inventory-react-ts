@@ -24,7 +24,8 @@ type Props = {
   inStockOnly: boolean;
   filterCategory: FilterCategory;
   // TODO: カテゴリは4択だからSetStateActionの返り値型もユニオン型にしておきたい！
-  onFilterCategoryChange: Dispatch<SetStateAction<string>>;
+  // stringの場所ってstateの型
+  onFilterCategoryChange: Dispatch<SetStateAction<FilterCategory>>;
   // フィルターテキストは商品名を入れるところです
   onFilterTextChange: Dispatch<SetStateAction<string>>;
   onInStockOnlyChange: Dispatch<SetStateAction<boolean>>;

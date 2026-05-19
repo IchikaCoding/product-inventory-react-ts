@@ -292,7 +292,9 @@ export default function FilterableProductTable() {
   // 検索テキストのstate変数の初期値
   const [filterText, setFilterText] = useState("");
   const [inStockOnly, setInStockOnly] = useState(false);
-  const [filterCategory, setFilterCategory] = useState("All");
+  const [filterCategory, setFilterCategory] = useState<
+    "All" | "Fruits" | "Vegetables" | "Snacks"
+  >("All");
 
   const visibleProducts = getVisibleProducts(products, filterCategory);
   // Portalで描画する場所を分けるために、index.htmlのmodal-rootを作成して取得
@@ -316,6 +318,7 @@ export default function FilterableProductTable() {
               filterText={filterText}
               inStockOnly={inStockOnly}
               filterCategory={filterCategory}
+              // onFilterCategoryChangeのstate型はFilterCategory型にした→setFilterCategoryを代入できるようになった
               onFilterCategoryChange={setFilterCategory}
               onFilterTextChange={setFilterText}
               onInStockOnlyChange={setInStockOnly}
