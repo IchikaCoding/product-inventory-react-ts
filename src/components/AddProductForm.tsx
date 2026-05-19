@@ -53,7 +53,7 @@ export default function AddProductForm({ products, onProductsChange }: Props) {
     }
 
     setErrorMessage(null);
-    const newProduct: Product = {
+    const newProduct = {
       id: crypto.randomUUID(),
       category: productCategory,
       price: Number(productPrice),
@@ -62,6 +62,7 @@ export default function AddProductForm({ products, onProductsChange }: Props) {
     };
 
     // FilterableProductTableにわたすための一時データ
+    // ! ここでエラーが発生→Product[]を追加したらproductsでエラー発生
     const newProducts: Product[] = [...products, newProduct];
     onProductsChange(newProducts);
   }
