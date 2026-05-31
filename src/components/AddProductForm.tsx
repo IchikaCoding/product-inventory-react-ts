@@ -4,7 +4,7 @@ import {
   validationTrimmedName,
 } from "../validation/validation";
 // ./これで一個上がる→componentsにいる。./でsrcにいく
-import type { Product } from "../data/products";
+import type { Product, Category } from "../data/products";
 
 // ここでinputされた情報を受け取る必要がある！
 
@@ -22,7 +22,9 @@ type Props = {
 };
 export default function AddProductForm({ products, onProductsChange }: Props) {
   // ローカルのstateを作成する
-  const [productCategory, onProductCategoryChange] = useState("Fruits");
+  // ! newProductのpruductCategoryの型がstringだった→Category型に修正
+  const [productCategory, onProductCategoryChange] =
+    useState<Category>("Fruits");
   // ! この子はe.target.valueでもらってくるから、文字列がよろしい
   const [productPrice, onProductPriceChange] = useState("");
   const [isProductStock, onIsProductStockChange] = useState(false);
@@ -54,7 +56,7 @@ export default function AddProductForm({ products, onProductsChange }: Props) {
 
     // TODO: ここの型を追加しておく。productCategoryがたぶんstringの可能性があるから注意してね
     setErrorMessage(null);
-    const newProduct = {
+    const newProduct: Product = {
       id: crypto.randomUUID(),
       category: productCategory,
       price: Number(productPrice),
@@ -68,6 +70,19 @@ export default function AddProductForm({ products, onProductsChange }: Props) {
     const newProducts: Product[] = [...products, newProduct];
     onProductsChange(newProducts);
   }
+  // TODO: isCategory 関数を準備
+  // Category型ですか？という関数にしたい
+  // valueがCategoryの中にあるかどうかチェック
+  // boolean型で回答が返ってきたらOK
+  // TODO: categories配列を作成→チェック
+  const categories: Category[] = ["Fruits", "Vegetables", "Snacks"];
+  // TODO: エラーを修正する
+  // 引数の型をどれにするといいのかな？string型だと`categories.some(value)`で型がずれる
+  // Category型にしたとしたら、isCategory関数なのに引数が最初からCategory型になってしまう
+  // →明日来れの解決策を探る
+  const isCategory = (value: string) => {
+    return categories.some(value);
+  };
   // onProductsChange(newProducts);
   return (
     <>
