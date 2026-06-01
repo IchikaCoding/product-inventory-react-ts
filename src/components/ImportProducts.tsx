@@ -1,12 +1,14 @@
 import { useState, useRef } from "react";
 // xlsxのpackageをインストールしておく必要がある
 import { read, utils } from "xlsx";
-import type { Product } from "../data/products";
+import type { Product, Category } from "../data/products";
 import type { Dispatch, SetStateAction, ChangeEvent } from "react";
 
 // CSVやExcelで使えるカテゴリの一覧
 const VALID_CATEGORIES = ["Fruits", "Vegetables", "Snacks"];
-
+const isCategory = (value: string): value is Category => {
+  return VALID_CATEGORIES.some((category) => category === value);
+};
 // ここの関数からデータの変換とエラー処理を学ぶ
 /**
  * 1行分のデータをバリデーションして、Productオブジェクトに変換する
@@ -63,7 +65,7 @@ function parseRow(row: RawRow, rowIndex: number): ParseRowResult {
 
   // カテゴリのチェック
   // categoryにVALID_CATEGORIES配列に含まれないカテゴリが入っていたらエラー
-  if (!VALID_CATEGORIES.includes(category)) {
+  if (!isCategory(category)) {
     // エラーとproductをプロパティにしてエラーならproduct側をnullにするのは、インポート処理とかで1行ずつチェックしたいときによく使われる
     return {
       product: null,
