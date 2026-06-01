@@ -26,8 +26,8 @@ export default function AddProductForm({ products, onProductsChange }: Props) {
   const [productCategory, onProductCategoryChange] =
     useState<Category>("Fruits");
   // ! この子はe.target.valueでもらってくるから、文字列がよろしい
-  const [productPrice, onProductPriceChange] = useState("");
-  const [isProductStock, onIsProductStockChange] = useState(false);
+  const [productPrice, onProductPriceChange] = useState<string>("");
+  const [isProductStock, onIsProductStockChange] = useState<boolean>(false);
   const [productName, onProductNameChange] = useState("");
   // エラーがあるなら文字列、ないならnullにした
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -54,7 +54,6 @@ export default function AddProductForm({ products, onProductsChange }: Props) {
       return;
     }
 
-    // TODO: ここの型を追加しておく。productCategoryがたぶんstringの可能性があるから注意してね
     setErrorMessage(null);
     const newProduct: Product = {
       id: crypto.randomUUID(),
@@ -66,24 +65,24 @@ export default function AddProductForm({ products, onProductsChange }: Props) {
 
     // FilterableProductTableにわたすための一時データ
     // ! ここでエラーが発生→Product[]を追加したらproductsでエラー発生
-    // TODO: productsは型を書いているのにどうしてエラーなのか、考える
     const newProducts: Product[] = [...products, newProduct];
     onProductsChange(newProducts);
   }
-  // TODO: isCategory 関数を準備
+  // ! isCategory 関数を準備
   // Category型ですか？という関数にしたい
   // valueがCategoryの中にあるかどうかチェック
   // boolean型で回答が返ってきたらOK
-  // TODO: categories配列を作成→チェック
+  // categories配列を作成→チェック
   const categories: Category[] = ["Fruits", "Vegetables", "Snacks"];
-  // TODO: エラーを修正する
-  // TODO: some()の意味を調べる
+  // ! some()の意味を調べる
+  // →some()は一つずつの要素をチェックしてくれる
+  // →引数には関数を入れます♪
   // 引数の型をどれにするといいのかな？string型だと`categories.some(value)`で型がずれる
   // Category型にしたとしたら、isCategory関数なのに引数が最初からCategory型になってしまう
   // →明日来れの解決策を探る
-  // TODO: この処理がtrueならvalueがCategory型ですよ
+  // この処理がtrueならvalueがCategory型ですよ
+  // 型ガードという！
   const isCategory = (value: string): value is Category => {
-    // some()は一つずつの要素をチェックしてくれる
     return categories.some((category) => {
       return category === value;
     });
@@ -105,6 +104,8 @@ export default function AddProductForm({ products, onProductsChange }: Props) {
             name="category"
             id="category-select"
             value={productCategory}
+            // TODO: eの型を追加してみる
+            // HTMLElementのselect要素のイベントですよって追加するのかも？
             onChange={(e) => {
               const value = e.target.value;
               if (isCategory(value)) {
