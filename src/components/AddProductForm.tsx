@@ -77,11 +77,16 @@ export default function AddProductForm({ products, onProductsChange }: Props) {
   // TODO: categories配列を作成→チェック
   const categories: Category[] = ["Fruits", "Vegetables", "Snacks"];
   // TODO: エラーを修正する
+  // TODO: some()の意味を調べる
   // 引数の型をどれにするといいのかな？string型だと`categories.some(value)`で型がずれる
   // Category型にしたとしたら、isCategory関数なのに引数が最初からCategory型になってしまう
   // →明日来れの解決策を探る
-  const isCategory = (value: string) => {
-    return categories.some(value);
+  // TODO: この処理がtrueならvalueがCategory型ですよ
+  const isCategory = (value: string): value is Category => {
+    // some()は一つずつの要素をチェックしてくれる
+    return categories.some((category) => {
+      return category === value;
+    });
   };
   // onProductsChange(newProducts);
   return (
@@ -101,7 +106,10 @@ export default function AddProductForm({ products, onProductsChange }: Props) {
             id="category-select"
             value={productCategory}
             onChange={(e) => {
-              onProductCategoryChange(e.target.value);
+              const value = e.target.value;
+              if (isCategory(value)) {
+                onProductCategoryChange(value);
+              }
             }}
             required
             className="form-select"
